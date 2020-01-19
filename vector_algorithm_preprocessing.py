@@ -82,6 +82,20 @@ def request_joint_data(filepath):
     cloud_pose_estimation = json.loads(resp_get_job.text)
     return cloud_pose_estimation['frames'][0]['persons'][0]['pose2d']['joints']
 
+def make_base_model(pathname, posename):
+    imgs = os.listdir(pathname)
+    i = 0
+    while(i < len(imgs)):
+        data = request_joint_data(imgs[i])
+        if i == 0:
+            output = np.array(data)
+        else:
+            vec = np.array(data)
+            output = np.vstack((output, vec))
+        i+=1
+    # writing to binary npy final
+    np.save(posename, output) # posename = <posename>.npy
+
 if __name__ == "__main__":
     # importing .json/jpeg file
     os.chdir(r"C:\Users\yasha\Desktop\McWics\james-test\base")
