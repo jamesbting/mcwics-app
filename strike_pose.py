@@ -8,6 +8,8 @@ import numpy as np
 import serial
 import vectorProcessing as vp
 import time
+import os
+
 from PIL import Image
 
 webcam = 0
@@ -19,7 +21,6 @@ def main():
     ser1 = serial.Serial('COM9', 9600)
     code = wrnchAI.license_check_string(licenseKey)
     time.sleep(4)
-    ser1.write('0'.encode())
 
     # setting tracking parameters
     params = wrnchAI.PoseParams()
@@ -45,6 +46,11 @@ def main():
     #pose_imgs = np.load(pose_img_path)
     #pose_imgs_list = [pose_imgs[i].tolist() for i in range(6)]
     pose = vp.request_joint_data(pose_img_path)
+    input("Press Enter to start")
+    ser1.write('0'.encode())
+    mcd = 'cmd /c "start vlc Countdown.mp4"'
+    os.system(mcd)
+
 
     with videocapture_context(0) as cap:
         visual = Visualizer()
@@ -61,7 +67,7 @@ def main():
                 for human in humans2d:
                     visual.draw_points(human.joints())
                     visual.draw_lines(human.joints(), bone_pairs)
-                    if stagger % 15 == 0:
+                    if stagger % 25 == 0:
                         # gives the coordinates to calculate similarity
                         input_data = human.joints().tolist()  # list of floats
                         comp_val = vp.compare_dance(input_data, pose)  # compare results
@@ -70,7 +76,6 @@ def main():
                             ser1.write('3'.encode())
                             print('excellent')
                             print(comp_val)
-                            print("GET READY FOR NEXT LETTER!")
                         elif 0.08 < comp_val <= 0.14:
                             # green
                             ser1.write('2'.encode())
@@ -78,10 +83,10 @@ def main():
                             print(comp_val)
                         elif 0.14 < comp_val:
                             # red
-                            ser1.write('1'.encode())
+                            #ser1.write('1'.encode())
                             print('bad')
                             print(comp_val)
-                    if stagger is 15:
+                    if stagger is 25:
                         stagger = 0
                     stagger += 1
 

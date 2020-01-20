@@ -1,0 +1,18 @@
+"""
+import serial
+import time
+print("test22")
+ser1 = serial.Serial('COM9', 9600)
+time.sleep(4)
+print("test222")
+ser1.write('0'.encode())
+time.sleep(4)
+print("test2222")
+ser1.write('1'.encode())
+time.sleep(3)
+"""
+import os
+mcd = 'cmd /c "start vlc Countdown.mp4"'
+os.system(mcd)
+print("test")
+
