@@ -1,6 +1,6 @@
-#include <Adafruit_NeoPixel.h>
+#include <Adafruit_NeoPixel.h>  // Library to download to use LED strip
 
-#define PIN 6
+#define PIN 6 // Output
 
 // Parameter 1 = number of pixels in strip
 // Parameter 2 = pin number (most are valid)
@@ -39,7 +39,7 @@ void loop() {
 // Waiting for player to be ready (5secs) + Ready Set Go 
 void detected(){
   for(uint16_t i=0; i<3; i++) {
-    //glow(strip.Color(255, 255, 255),2);  // White glow up and down i times
+    //glow(strip.Color(255, 255, 255),2);  // White glow up and down 3 times
   }
 
   glow(strip.Color(0, 255, 0),0.5);  // Red glow up and down -- ready
@@ -81,13 +81,13 @@ void gameColor(uint8_t wait) {
 
 // Start of the game + detection of movements with adjusting color
 void danceDetection(){
-  for(uint16_t j=0; j<5; j++) {
+  for(uint16_t j=0; j<5; j++) {  // Create infinite loop
     if (j==4){
-      j = 0;
+      j = 0; // Resets infinite loop
     }
-      if(Serial.available() > 0)
+      if(Serial.available() > 0)  // Check if signal from python script file is received
   {
-    uint16_t input = Serial.read();
+    uint16_t input = Serial.read();  // Stores signal from python script and display different colors depending on the input provided
     if(input == '1')
     {
       glow(strip.Color(0, 255, 0),0.5);  // Red glow up and down -- wrong
@@ -105,7 +105,7 @@ void danceDetection(){
 
     else if(input == '4')
     {
-      endGame(strip.Color(127, 127, 127), 50, 30);  // Green wipe -- yes
+      endGame(strip.Color(127, 127, 127), 50, 30);  // Theatre-style crawling lights -- end of game / all moves executed
       return;
       
       
@@ -120,7 +120,6 @@ void danceDetection(){
 }
 
 
-  
 // Glows one color up and down
 void glow(uint32_t c, uint8_t wait) {
   uint16_t i, j;
@@ -145,12 +144,7 @@ void glow(uint32_t c, uint8_t wait) {
   strip.setBrightness(255);
 }
 
-
-
-
-
-
-//// Fill the dots one after the other with a color
+// Fill the dots one after the other with a color
 void colorWipe(uint32_t c, uint8_t wait) {
   for(uint16_t i=0; i<strip.numPixels(); i++) {
       strip.setPixelColor(i, c);
@@ -159,10 +153,8 @@ void colorWipe(uint32_t c, uint8_t wait) {
   }
 }
 
-
-
-//// Input a value 0 to 255 to get a color value.
-//// The colours are a transition r - g - b - back to r.
+// Input a value 0 to 255 to get a color value.
+// The colours are a transition r - g - b - back to r.
 uint32_t Wheel(byte WheelPos) {
   if(WheelPos < 85) {
    return strip.Color(WheelPos * 3, 255 - WheelPos * 3, 0);
@@ -172,7 +164,7 @@ uint32_t Wheel(byte WheelPos) {
   }
 }
 
-////Theatre-style crawling lights
+//Theatre-style crawling lights
 void endGame(uint32_t c, uint8_t wait, uint32_t cycle) {
   for (int j=0; j<cycle; j++) {  //do 'cycle' cycles of chasing
     for (int q=0; q < 3; q++) {
@@ -189,3 +181,4 @@ void endGame(uint32_t c, uint8_t wait, uint32_t cycle) {
     }
   }
 }
+// Note : Some of the LED patterns were taken/modified from the example section in the Adafruit_NeoPixel library
